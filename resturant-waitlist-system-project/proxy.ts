@@ -1,11 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verify } from "jsonwebtoken";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  // Allow access to the staff login page
+  if (pathname === "/staff/login") {
+    return NextResponse.next();
+  }
+
+  const isApiRoute = pathname.startsWith("/api/");
   const secret = process.env.JWT_SECRET;
   const token = request.cookies.get("staff-session")?.value;
 
-  let isValid = false;
+  let isAuthenticated = false;
+
   if (token && secret) {
     try {
       const payload = verify(token, secret, { algorithms: ["HS256"] });
@@ -16,26 +25,23 @@ export function middleware(request: NextRequest) {
         typeof payload.sub === "string" &&
         /^[1-9]\d*$/.test(payload.sub)
       ) {
-        isValid = true;
+        isAuthenticated = true;
       }
     } catch {
-      isValid = false;
+      isAuthenticated = false;
     }
   }
 
-  const isApiRoute = request.nextUrl.pathname.startsWith("/api/");
-
-  if (request.nextUrl.pathname === "/staff/login") {
-    return NextResponse.next();
-  }
-
-  if (!isValid) {
+  if (!isAuthenticated) {
+    // Return 401 JSON for API requests instead of redirecting
     if (isApiRoute) {
       return NextResponse.json(
         { error: "Authentication required." },
         { status: 401 },
       );
     }
+
+    // Redirect frontend requests to the login page
     return NextResponse.redirect(new URL("/staff/login", request.url));
   }
 
