@@ -1,4 +1,4 @@
-import WaitlistCard from "../../components/waitlist-card/waitlist-card";
+import WaitlistCard from "./_components/waitlist-card";
 
 export default function WaitlistRegisterPage() {
   return (
@@ -11,8 +11,8 @@ export default function WaitlistRegisterPage() {
             are <span className="text-emerald-800 italic">gathering.</span>
           </h1>
           <p className="mt-6 max-w-md text-base leading-7 text-stone-600 sm:text-lg">
-            Add your party to the waitlist and we&apos;ll get your table ready
-            as soon as we can.
+            Add your party to the waitlist and we&apos;ll get your table ready as
+            soon as we can.
           </p>
         </div>
 

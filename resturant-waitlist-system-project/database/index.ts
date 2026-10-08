@@ -1,5 +1,5 @@
 import type Database from "better-sqlite3";
-import { hashPassword } from "@/lib/password";
+import { hashPassword } from "@/app/staff/_lib/password";
 import type { RepositoryBundle } from "@/database/contracts";
 import { openSqliteDatabase } from "@/database/sqlite/connection";
 import { applySqliteMigrations } from "@/database/sqlite/migrate";

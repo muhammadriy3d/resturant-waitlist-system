@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getPartiesAhead } from "@/lib/waitlist";
+import { getPartiesAhead } from "@/app/waitlist/_lib/waitlist";
 
 const noStoreHeaders = { "Cache-Control": "no-store, max-age=0" };
 

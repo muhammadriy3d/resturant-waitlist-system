@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getStaffFromToken } from "@/lib/auth";
+import { getStaffFromToken } from "@/app/staff/_lib/auth";
 
 export function GET(request: NextRequest) {
   const staff = getStaffFromToken(request.cookies.get("staff-session")?.value);

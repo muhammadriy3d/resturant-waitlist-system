@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { repositories } from "@/database";
 import {
   createStaffToken,
-} from "@/lib/auth";
-import { verifyPassword } from "@/lib/password";
+} from "@/app/staff/_lib/auth";
+import { verifyPassword } from "@/app/staff/_lib/password";
 
 export async function POST(request: NextRequest) {
   let body: unknown;

@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
-import { registerWaitlistEntry, validateWaitlistInput } from "@/lib/waitlist";
+import { registerWaitlistEntry, validateWaitlistInput } from "@/app/waitlist/_lib/waitlist";
 
 export async function POST(request: Request) {
   let body: unknown;

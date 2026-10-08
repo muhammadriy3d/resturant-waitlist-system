@@ -1,13 +1,13 @@
 "use client";
 
-import { useActionState, useEffect, useOptimistic, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import Button from "../button";
-import Card from "../card";
+import Button from "@/app/_components/button";
+import Card from "@/app/_components/card";
 import {
   registerGuest,
   type RegisterGuestState,
-} from "@/actions/register-guest/action";
+} from "../_actions/register-guest";
 
 const initialState: RegisterGuestState = { message: "", success: false };
 
@@ -18,17 +18,13 @@ export default function WaitlistCard() {
     registerGuest,
     initialState,
   );
-  const [optimisticStatus, setOptimisticStatus] = useOptimistic<
-    "idle" | "assigning"
-  >("idle");
-
-  async function submitForm(formData: FormData) {
-    setOptimisticStatus("assigning");
-    await formAction(formData);
-  }
 
   useEffect(() => {
-    if (!state.success || state.ticket === undefined || handledSuccess.current) {
+    if (
+      !state.success ||
+      state.ticket === undefined ||
+      handledSuccess.current
+    ) {
       return;
     }
 
@@ -47,7 +43,7 @@ export default function WaitlistCard() {
         </p>
       </div>
 
-      <form action={submitForm} className="space-y-5">
+      <form action={formAction} className="space-y-5">
         <div>
           <label
             className="mb-2 block text-sm font-medium text-stone-800"
@@ -57,12 +53,13 @@ export default function WaitlistCard() {
           </label>
           <input
             autoComplete="name"
-            className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-emerald-800 focus:ring-4 focus:ring-emerald-900/10"
+            className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-emerald-800 focus:ring-4 focus:ring-emerald-900/10 disabled:opacity-50"
             id="name"
             maxLength={80}
             name="name"
             placeholder="e.g. Alex Morgan"
             required
+            disabled={isPending}
           />
         </div>
 
@@ -74,7 +71,7 @@ export default function WaitlistCard() {
             Party size
           </label>
           <input
-            className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-emerald-800 focus:ring-4 focus:ring-emerald-900/10"
+            className="min-h-12 w-full rounded-xl border border-stone-300 bg-white px-4 text-base text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-emerald-800 focus:ring-4 focus:ring-emerald-900/10 disabled:opacity-50"
             id="partySize"
             max={20}
             min={1}
@@ -82,11 +79,16 @@ export default function WaitlistCard() {
             placeholder="e.g. 2"
             required
             type="number"
+            disabled={isPending}
           />
         </div>
 
-        {(optimisticStatus === "assigning" || isPending) && (
-          <p aria-live="polite" className="text-sm text-stone-600" role="status">
+        {isPending && (
+          <p
+            aria-live="polite"
+            className="text-sm text-stone-600"
+            role="status"
+          >
             Assigning your ticket number...
           </p>
         )}

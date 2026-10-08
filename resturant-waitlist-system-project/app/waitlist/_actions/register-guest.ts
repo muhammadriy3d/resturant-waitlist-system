@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import {
   registerWaitlistEntry,
   validateWaitlistInput,
-} from "@/lib/waitlist";
+} from "../_lib/waitlist";
 
 export type RegisterGuestState = {
   message: string;

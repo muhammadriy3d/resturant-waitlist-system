@@ -25,11 +25,14 @@ Staff members can log in to a secure dashboard to view the current waiting parti
 
 ## Project structure
 
-- `app/` — pages and API routes
-- `components/` — UI components
-- `lib/` — validation, auth, and waitlist logic
-- `database/` — SQLite connection, models, and migrations
-- `actions/` — server actions
+The project follows Next.js feature-based folder organization ("Split project files by feature or route"):
+
+- `app/_components/` — globally shared UI components (`Button`, `Card`)
+- `app/_lib/` — globally shared utilities (`cn`)
+- `app/waitlist/` — waitlist feature (pages, `_actions`, `_components`, `_lib`)
+- `app/staff/` — staff feature (dashboard, login, `_actions`, `_lib`)
+- `app/api/` — API route handlers
+- `database/` — SQLite connection, migrations, and repository layer
 
 ## Setup
 

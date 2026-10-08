@@ -1,49 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useState } from "react";
+import { staffLogin, type StaffLoginState } from "../_actions/staff-login";
+
+const initialState: StaffLoginState = {
+  message: "",
+  success: false,
+};
 
 export default function LoginPage() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [isPending, setIsPending] = useState(false);
-
-  async function submitLogin(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setErrorMessage("");
-    setIsPending(true);
-
-    const formData = new FormData(event.currentTarget);
-    try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: formData.get("username"),
-          password: formData.get("password"),
-        }),
-      });
-      const result: unknown = await response.json();
-      if (!response.ok) {
-        setErrorMessage(
-          typeof result === "object" &&
-            result !== null &&
-            "error" in result &&
-            typeof result.error === "string"
-            ? result.error
-            : "Unable to log in. Please try again.",
-        );
-        return;
-      }
-
-      router.replace("/staff");
-    } catch {
-      setErrorMessage("Unable to reach the server. Please try again.");
-    } finally {
-      setIsPending(false);
-    }
-  }
+  const [state, formAction, isPending] = useActionState(staffLogin, initialState);
 
   return (
     <main className="grid min-h-screen place-items-center bg-stone-50 px-5 py-12 text-stone-900">
@@ -53,7 +20,7 @@ export default function LoginPage() {
         </p>
         <h1 className="mt-2 text-2xl font-semibold tracking-tight">Log in</h1>
 
-        <form className="mt-6 space-y-5" onSubmit={submitLogin}>
+        <form className="mt-6 space-y-5" action={formAction}>
           <div>
             <label htmlFor="username" className="mb-2 block text-sm font-medium">
               Username
@@ -64,7 +31,8 @@ export default function LoginPage() {
               type="text"
               autoComplete="username"
               required
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+              disabled={isPending}
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 disabled:opacity-50"
             />
           </div>
 
@@ -78,7 +46,8 @@ export default function LoginPage() {
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               required
-              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+              disabled={isPending}
+              className="w-full rounded-lg border border-stone-300 px-3 py-2.5 outline-none focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100 disabled:opacity-50"
             />
             <label className="mt-3 flex w-fit items-center gap-2 text-sm text-stone-600">
               <input
@@ -91,16 +60,16 @@ export default function LoginPage() {
             </label>
           </div>
 
-          {errorMessage && (
+          {state.message && (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
-              {errorMessage}
+              {state.message}
             </p>
           )}
 
           <button
             type="submit"
             disabled={isPending}
-            className="mx-auto block min-h-11 w-full max-w-48 rounded-lg bg-emerald-800 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2"
+            className="mx-auto block min-h-11 w-full max-w-48 rounded-lg bg-emerald-800 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
           >
             {isPending ? "Logging in..." : "Log in"}
           </button>

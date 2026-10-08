@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { connection } from "next/server";
-import { getStaffFromToken } from "@/lib/auth";
-import { getWaitlistEntries } from "@/lib/waitlist";
+import { getStaffFromToken } from "./_lib/auth";
+import { getWaitlistEntries } from "@/app/waitlist/_lib/waitlist";
 
 export default function StaffPage() {
   return (
@@ -20,6 +20,7 @@ export default function StaffPage() {
 }
 
 async function StaffDashboard() {
+  // Opt into dynamic rendering for incoming HTTP request context (not a database connection)
   await connection();
   const cookieStore = await cookies();
   const staff = getStaffFromToken(cookieStore.get("staff-session")?.value);

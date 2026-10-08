@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import WaitlistResults from "./waitlist-results";
+import WaitlistResults from "./_components/waitlist-results";
 
 export default function WaitlistResultsPage() {
   return (

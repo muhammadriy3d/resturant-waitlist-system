@@ -35,6 +35,8 @@ export function openSqliteDatabase(): Database.Database {
   }
 
   const database = new Database(filename);
+  database.pragma("journal_mode = WAL");
+  database.pragma("busy_timeout = 5000");
   database.pragma("foreign_keys = ON");
   return database;
 }
