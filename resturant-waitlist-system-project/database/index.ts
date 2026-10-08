@@ -39,9 +39,9 @@ function configureStaffAccount(repositories: RepositoryBundle): void {
 
   const username = configuredUsername.trim().toLowerCase();
   const name = process.env.STAFF_NAME?.trim() || username;
-  if (!username || username.length > 80 || configuredPassword.length < 12) {
+  if (!username || username.length > 80 || configuredPassword.length < 6) {
     throw new Error(
-      "STAFF_USERNAME must be 1-80 characters and STAFF_PASSWORD must be at least 12 characters.",
+      "STAFF_USERNAME must be 1-80 characters and STAFF_PASSWORD must be at least 6 characters.",
     );
   }
 
